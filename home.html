@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container{
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            
+        }
+        #input{
+            height: 35px;
+            width: 300px;
+            background: cornflowerblue;
+            /* border: 0; */
+            padding: 5px;
+            border-radius: 7px;
+
+
+        }
+        #search-btn{
+
+            height: 45px;
+            padding: 5px;
+            background: salmon;
+            width: 150px;
+            border: 0;
+            border-radius: 6px;
+            transition: 0.1s ease-in;
+
+
+        }
+        #search-btn:hover{
+            width: 160px;
+            height: 50px;
+        }
+
+        .movie-input-box
+       {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+.search-result-box, 
+.local-result-box{
+    display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+    flex-direction: column;
+    border-radius: 20px;
+
+    min-height: 50vh;
+    background: cornflowerblue;
+ 
+}
+.search-result-box{
+    gap: 10px;
+   min-height: 60vh;
+} .search-result-box .movie-box{
+    height: 30px;
+}
+/* .search-result img{
+height: 250px;
+}  */
+
+
+.local-result{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 20px;
+}
+
+
+.search-result img,
+.local-result img{
+    height: 250px;
+    width: 90%;
+    margin: auto;
+    border-radius: 7px ;
+    transition: 0.5s ease-in-out;
+}
+.search-result img{
+    height: 200px;
+
+}
+.search-result img:hover{
+    height: 210px;
+}
+
+.local-result img:hover{
+    height: 255px;
+    width: 95%;
+}
+
+.movie-box{
+    height: 350px;
+    
+}
+
+ .search-result .movie-box {
+    height: 300px;
+ }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="movie-input-box">
+            <input type="text" class="movie-input" id="input" placeholder="Enter Movie name">
+            <div class="suggest"></div>
+            <button id="search-btn">Get movie</button>
+
+        
+        </div>
+
+        <div class="search-result-box">
+            <h2>Search result</h2>
+            <div class="search-result"></div>
+        </div>
+        <div class="local-result-box">
+            <h2>Previous Searches</h2>
+            <div class="local-result"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let movieData = JSON.parse(localStorage.getItem("movieData")) ?? [];
+    let url = `http://www.omdbapi.com/?apikey=d2fda3cc&t=`;
+let key = `d2fda3cc`;
+
+document.querySelector("#search-btn").addEventListener("click",()=>{
+    getData()
+})
+
+async function getData() {
+    try{
+        let movie = document.getElementById("input").value;
+    let title = movie.split(" ").join("+");
+    let res = await fetch(`${url}+${title}`)
+    let data = await res.json()
+     movieData.unshift(data);
+     localStorage.setItem("movieData",JSON.stringify(movieData));
+// console.log(data.imdbRating>8.4) 
+     resentShow(data);
+     preShow(movieData);
+    } catch(err) {
+       let body = document.querySelector("body");
+       console.log(err+"  an err")
+
+    } 
+}
+
+
+
+function resentShow(element) {
+
+     let mainDiv = document.querySelector(".search-result");
+     mainDiv.innerHTML = "";
+
+    //  data.forEach(element => {
+         let movie_box = document.createElement("div");
+         movie_box.setAttribute("class","movie-box")
+
+         let movieP = document.createElement("img");
+         movieP.src = element.Poster;
+
+         let Title = document.createElement("h3");
+         Title.innerText = element.Title;
+
+         let info_d_r = document.createElement("div");
+         let span_d = document.createElement("span");
+         span_d.innerText = ` ${element.Director}, `;
+
+         let span_r = document.createElement("span");
+         span_r.innerText = element.Released;
+         info_d_r.append(span_d,span_r);
+
+         let genre = document.createElement("div");
+         genre.innerText = element.Genre;
+let button = document.createElement("button");
+button.innerText = "Watch Now"
+         if(element.imdbRating>8.4) {
+    let h4 = document.createElement("h4").innerText="Recommended"
+    h4.setAttribute("class","rec")
+    movie_box.append(movieP,Title,info_d_r,genre,h4,button)
+         } else {
+            movie_box.append(movieP,Title,info_d_r,genre,button)
+         }
+       
+         mainDiv.append(movie_box)
+    //  });
+ }
+ preShow(movieData);
+ function preShow(data) {
+     let mainDiv = document.querySelector(".local-result");
+
+     mainDiv.innerHTML = "";
+
+     data.forEach(element => {
+         let movie_box = document.createElement("div");
+           movie_box.setAttribute("class","movie-box")
+         let movieP = document.createElement("img");
+         movieP.src = element.Poster;
+
+         let Title = document.createElement("h3");
+         Title.innerText = element.Title;
+
+         let info_d_r = document.createElement("div");
+         let span_d = document.createElement("span");
+         span_d.innerText = ` ${element.Director}, `;
+
+         let span_r = document.createElement("span");
+         span_r.innerText = element.Released;
+         info_d_r.append(span_d,span_r);
+
+         let genre = document.createElement("div");
+         genre.innerText = element.Genre;
+
+         genre.innerText = element.Genre;
+let button = document.createElement("button");
+button.innerText = "Watch Now"
+         if(data.imdbRating>8.4) {
+    let h4 = document.createElement("h4").innerText="Recommended"
+    h4.setAttribute("class","rec")
+    movie_box.append(movieP,Title,info_d_r,genre,h4,button)
+         } else {
+            movie_box.append(movieP,Title,info_d_r,genre,button)
+         }
+         mainDiv.append(movie_box)
+     });
+ }
+
+ 
+
+</script>

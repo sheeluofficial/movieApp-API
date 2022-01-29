@@ -1,0 +1,25 @@
+.movie-box h3{
+margin: 0;
+}
+
+.res{
+    background-color: red;
+    color: royalblue;
+    padding: 3px;
+}
+
+.movie-box button{
+    background-color: royalblue;
+    justify-content: center;
+    padding: 6px;
+    border: 0;
+    height: 30px;
+    width: 80%;
+    margin: auto;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+.movie-box button:hover{
+    height: 35px;
+    width: 85%;
+}

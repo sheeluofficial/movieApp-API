@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #data{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 30px;
+        }
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="data"></div>
+</body>
+</html>
+<script>
+    // let url = `https://reqres.in/api/users?page=2`;
+    let url = `https://fakestoreapi.com/products`
+
+
+//     fetch(url).then(function(res){
+//         let data = res.json()
+// data.then(function (response) {
+//     console.log(response.data)
+// })
+      
+//     }).catch(function (err) {
+//         console.log(err)
+//     })
+// getData()
+// async function getData() {
+//     try{
+//         let res = await fetch(url)
+//     let data = await res.json()
+//     showData(data.data)
+//     }
+//    catch(err) {
+//        console.log(err +    "me")
+//    }
+   
+// }
+
+//     function showData(data) {
+//         let main = document.getElementById("data");
+//         main.innerHTML = ""
+//         data.forEach(element => {
+//             let div = document.createElement("div");
+//             let img = document.createElement("img");
+//             img.src = element.avatar;
+//             let name = document.createElement("h3");
+//             name.innerText = element.first_name;
+//             div.append(img,name)
+// main.append(div)
+//         });
+//     } 
+
+
+getData()
+async function getData() {
+    try{
+        let res = await fetch(url)
+    let data = await res.json()
+    console.log(data)
+    showData(data)
+    }
+   catch(err) {
+       console.log(err +    "me")
+   }
+   
+}
+
+    function showData(data) {
+        let main = document.getElementById("data");
+        main.innerHTML = ""
+        data.forEach(element => {
+            let div = document.createElement("div");
+            let img = document.createElement("img");
+            img.src = element.image;
+            let price = document.createElement("h3");
+            price.innerText = element.price
+            let name = document.createElement("h2");
+            name.innerText = element.title;
+            div.append(img,price,name)
+main.append(div)
+        });
+    }
+</script>
